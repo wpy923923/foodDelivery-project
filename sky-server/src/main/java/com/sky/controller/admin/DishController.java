@@ -58,6 +58,7 @@ public class DishController {
     @Operation(summary = "删除菜品")
     public Result delete(@RequestParam List<Long> ids){
         log.info("删除菜品：{}", ids);
+        log.info("删除菜品：{}", ids);
         dishService.delete(ids);
         return Result.success();
     }
