@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -43,4 +45,6 @@ public interface DishMapper {
     void update(Dish dish);
     @Delete("delete from dish where id = #{id}")
     void deleteById(Long id);
+
+    List<Dish> list(Dish dish);
 }

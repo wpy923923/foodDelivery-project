@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+    <insert id="insert" parameterType="Setmeal" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal(name, price, description, image, category_id, create_time, update_time, create_user, update_user, status)
+        values (#{name}, #{price}, #{description}, #{image}, #{categoryId}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status})
+    </insert>
+
+    <update id="update">
+        update setmeal
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="pageQuery" resultType="com.sky.entity.Setmeal">
+        SELECT * FROM setmeal
+        <where>
+            <!-- 【修复1】增加 != '' 判断，避免空字符串触发全表模糊查询 -->
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <!-- 【修复2】每个条件前都加 AND，<where> 会自动去除第一个多余的 AND -->
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+</mapper>
