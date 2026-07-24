@@ -12,7 +12,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 /**
  * 全局异常处理器，处理项目中抛出的业务异常
  */
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.sky.controller")
 @Slf4j
 public class GlobalExceptionHandler {
 

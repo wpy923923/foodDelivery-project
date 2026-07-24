@@ -7,38 +7,42 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/sky_take_out?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: 923923
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sky_take_out?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 923923
+  data:
+    redis:
+      # 这里的占位符名字必须改变，避免跟当前路径重名引发死循环
+      host: ${sky.redis.config.host}
+      port: ${sky.redis.config.port}
+      password: ${sky.redis.config.password}
 
 mybatis:
-  #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.sky.entity
   configuration:
-    #开启驼峰命名
     map-underscore-to-camel-case: true
 
 logging:
   level:
-    com:
-      sky:
-        mapper: debug
-        service: info
-        controller: info
+    com.sky.mapper: debug
+    com.sky.service: info
+    com.sky.controller: info
 
 sky:
   jwt:
-    # 设置jwt签名加密时使用的秘钥
     admin-secret-key: itcast
-    # 设置jwt过期时间
     admin-ttl: 72000000
-    # 设置前端传递过来的令牌名称
     admin-token-name: token
-  alioss:
-    endpoint: ${sky.alioss.endpoint}
-    access-key-id: ${sky.alioss.access-key-id}
-    access-key-secret: ${sky.alioss.access-key-secret}
-    bucket-name: ${sky.alioss.bucket-name}
+
+# Knife4j 接口文档配置
+knife4j:
+  enable: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
