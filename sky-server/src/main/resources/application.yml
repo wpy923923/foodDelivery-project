@@ -35,7 +35,12 @@ sky:
     admin-secret-key: itcast
     admin-ttl: 72000000
     admin-token-name: token
-
+    user-secret-key: itheima
+    user-ttl: 72000000
+    user-token-name: authentication
+  wechat:
+    appid: ${wechat.appid}
+    secret: ${wechat.secret}
 # Knife4j 接口文档配置
 knife4j:
   enable: false
