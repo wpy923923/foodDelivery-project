@@ -7,4 +7,6 @@ public interface ShoppingCartService {
     void add(ShoppingCart shoppingCart);
 
     Object list();
+
+    void clean();
 }
