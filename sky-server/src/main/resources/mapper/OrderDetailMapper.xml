@@ -11,5 +11,4 @@
             #{od.number},#{od.amount},#{od.image})
         </foreach>
     </insert>
-
 </mapper>

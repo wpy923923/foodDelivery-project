@@ -41,6 +41,17 @@ sky:
   wechat:
     appid: ${wechat.appid}
     secret: ${wechat.secret}
+    mchid: ${wechat.mchid}
+    mchSerialNo: ${wechat.mchSerialNo}
+    privateKeyFilePath: ${wechat.privateKeyFilePath}
+    apiV3Key: ${wechat.apiV3Key}
+    weChatPayCertFilePath: ${wechat.weChatPayCertFilePath}
+    notifyUrl: ${wechat.notifyUrl}
+    refundNotifyUrl: ${wechat.refundNotifyUrl}
+  shop:
+    address: 山西省吕梁市离石区坪头乡
+  baidu:
+    ak: 1tGwgp9Bgbj5pTI5fNv2ajPZXQv8F2zw
 # Knife4j 接口文档配置
 knife4j:
   enable: false
