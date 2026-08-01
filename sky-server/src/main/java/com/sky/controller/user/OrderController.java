@@ -7,6 +7,7 @@ import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -74,5 +75,20 @@ public class OrderController {
         log.info("历史订单查询：{}, {}, {}", page, pageSize, status);
         PageResult pageResult = orderService.listHistoryOrders(page, pageSize, status);
         return Result.success(pageResult);
+    }
+
+    @GetMapping("/orderDetail/{id}")
+    @Operation(summary = "查询订单详情")
+    public Result<OrderVO> orderDetail(@PathVariable Long id) {
+        log.info("查询订单详情：{}", id);
+        return Result.success(orderService.getOrderVO(id));
+    }
+
+    @GetMapping("reminder/{id}")
+    @Operation(summary = "订单提醒")
+    public Result reminder(@PathVariable Long id){
+        log.info("订单提醒：{}", id);
+        orderService.reminder(id);
+        return Result.success();
     }
 }

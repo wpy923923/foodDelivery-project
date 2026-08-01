@@ -61,6 +61,9 @@ public class OrderServiceImpl implements OrderService {
     @Value("${sky.baidu.ak}")
     private String ak;
 
+    @Value("${sky.payment.mock-enabled:false}")
+    private boolean mockPaymentEnabled;
+
     @Override
     public OrderSubmitVO submit(OrdersSubmitDTO orderSubmitDTO) {
         AddressBook addressBook = addressBookMapper.getById(orderSubmitDTO.getAddressBookId());
@@ -190,6 +193,20 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+        if (mockPaymentEnabled) {
+            Orders order = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
+            if (order == null) {
+                throw new OrderBusinessException("订单不存在");
+            }
+            if (Orders.PAID.equals(order.getPayStatus())) {
+                throw new OrderBusinessException("该订单已支付");
+            }
+
+            log.warn("本地模拟支付已启用，订单 {} 将直接支付成功", order.getNumber());
+            paySuccess(order.getNumber());
+            return OrderPaymentVO.builder().build();
+        }
+
         // 当前登录用户id
         Long id = BaseContext.getCurrentId();
         User user = userMapper.getByOpenid(String.valueOf(id));
@@ -278,14 +295,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderVO getOrderVO(Long id) {
-        return orderMapper.getOrderVO(id);
+        OrderVO orderVO = orderMapper.getOrderVO(id);
+        if (orderVO == null) {
+            throw new OrderBusinessException("订单不存在");
+        }
+        orderVO.setOrderDetailList(orderDetailMapper.listByOrderId(id));
+        return orderVO;
 
     }
 
     @Override
     public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
         Orders orders = new Orders();
-        BeanUtils.copyProperties(ordersConfirmDTO, orders);
+        orders.setId(ordersConfirmDTO.getId());
+        orders.setStatus(Orders.CONFIRMED);
         orderMapper.update(orders);
     }
 
@@ -344,6 +367,20 @@ public class OrderServiceImpl implements OrderService {
         }
         orders.setStatus(Orders.COMPLETED);
         orderMapper.update(orders);
+    }
+
+    @Override
+    public void reminder(Long id) {
+        Orders orders = orderMapper.getById(id);
+        if (orders == null || (!Orders.TO_BE_CONFIRMED.equals(orders.getStatus())
+                && !Orders.CONFIRMED.equals(orders.getStatus()))) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        Map map = new HashMap();
+        map.put("type", 2);//2代表用户催单
+        map.put("orderId", id);
+        map.put("content", "订单号：" + orders.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
