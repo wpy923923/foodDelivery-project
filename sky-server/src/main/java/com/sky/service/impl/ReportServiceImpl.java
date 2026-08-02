@@ -41,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
             map.put("begin", startTime);
             map.put("end", endTime);
             map.put("status", Orders.COMPLETED );
-            Double turnover = orderMapper.sumTurnover(map);
+            Double turnover = (double) orderMapper.countByMap(map);
             turnover = turnover == null ? 0.0 : turnover;
             turnoverList.add(turnover);
         }
@@ -63,11 +63,14 @@ public class ReportServiceImpl implements ReportService {
         for (LocalDate date : dataList){
             LocalDateTime startTime = LocalDateTime.of(date, LocalTime.MIN);
             LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+
             Map<String, Object> map = new HashMap<>();
+            Integer totalUser = orderMapper.countByMap(map);
             map.put("begin", startTime);
             map.put("end", endTime);
-            Integer newUser = orderMapper.countNewUser(map);
-            Integer totalUser = orderMapper.countTotalUser(map);
+            ;
+            Integer newUser = orderMapper.countByMap(map);
+
             newUserList.add(newUser);
             totalUserList.add(totalUser);
         }
@@ -95,10 +98,10 @@ public class ReportServiceImpl implements ReportService {
             Map<String, Object> map = new HashMap<>();
             map.put("begin", startTime);
             map.put("end", endTime);
-            Integer orderCount = orderMapper.countOrder(map);
+            Integer orderCount = orderMapper.countByMap(map);
             orderCountList.add(orderCount);
             map.put("status", Orders.COMPLETED);
-            Integer validOrderCount = orderMapper.countOrder(map);
+            Integer validOrderCount = orderMapper.countByMap(map);
             validOrderCountList.add(validOrderCount);
         }
         Integer totalOrderCount = orderCountList.stream().reduce(Integer::sum).orElse(0);

@@ -6,7 +6,6 @@ import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
@@ -35,14 +34,12 @@ public interface OrderMapper {
     @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrdertimeLT(Integer status, LocalDateTime orderTime);
 
-    Double sumTurnover(Map<String, Object> map);
-    
-    Integer countNewUser(Map<String, Object> map);
-
-    Integer countTotalUser(Map<String, Object> map);
-
-    Integer countOrder(Map<String, Object> map);
 
 
-    List<GoodsSalesDTO> getSalesTop10(@Param("begin") LocalDateTime beginTime, @Param("end") LocalDateTime endTime);
+
+    List<GoodsSalesDTO> getSalesTop10( LocalDateTime begin,  LocalDateTime end);
+
+
+
+    Integer countByMap(Map map);
 }

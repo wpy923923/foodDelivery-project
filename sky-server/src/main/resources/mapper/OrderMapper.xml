@@ -41,51 +41,10 @@
             id = #{id}
         </where>
     </select>
-    <select id="sumTurnover" resultType="java.lang.Double">
-        select sum(amount) from orders
-        <where>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-            <if test="begin != null">
-                and order_time &gt;= #{begin}
-            </if>
-            <if test="end != null">
-                and order_time &lt;= #{end}
-            </if>
-        </where>
-    </select>
-    <select id="countNewUser" resultType="java.lang.Integer">
-        select count(distinct user_id) from orders
-        <where>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-            <if test="begin != null">
-                and order_time &gt;= #{begin}
-            </if>
-            <if test="end != null">
-                and order_time &lt;= #{end}
-            </if>
-        </where>
-    </select>
-    <select id="countTotalUser" resultType="java.lang.Integer">
-        select count(distinct user_id) from orders
-    </select>
-    <select id="countOrder" resultType="java.lang.Integer">
-        select count(*) from orders
-        <where>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-            <if test="begin != null">
-                and order_time &gt;= #{begin}
-            </if>
-            <if test="end != null">
-                and order_time &lt;= #{end}
-            </if>
-        </where>
-    </select>
+
+
+
+
     <select id="getSalesTop10" resultType="com.sky.dto.GoodsSalesDTO">
         select od.name name,sum(od.number) number from order_detail od ,orders o
         where od.order_id = o.id
@@ -99,6 +58,21 @@
         group by name
         order by number desc
         limit 0, 10
+    </select>
+
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(*) from orders
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="begin != null">
+                and order_time &gt;= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+        </where>
     </select>
 
 
