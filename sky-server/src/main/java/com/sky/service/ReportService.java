@@ -4,6 +4,7 @@ import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,4 +17,6 @@ public interface ReportService {
     OrderReportVO getOrdersStatistics(String begin, String end);
 
     SalesTop10ReportVO getTop10(LocalDate begin, LocalDate end);
+
+    void export(HttpServletResponse response);
 }
